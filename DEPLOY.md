@@ -1,6 +1,6 @@
 # 🐶 Puggle Deployment Guide - Digital Ocean
 
-Complete guide to deploy your pug-themed Puggle game on a Digital Ocean droplet.
+Complete guide to deploy your pug-themed Puggle game on a Digital Ocean droplet using Docker.
 
 ## Prerequisites
 
@@ -10,7 +10,11 @@ Complete guide to deploy your pug-themed Puggle game on a Digital Ocean droplet.
 
 ---
 
-## Step 1: Initial Server Setup
+## 🐳 Method 1: Docker Deployment (Recommended)
+
+This is the easiest and most reliable way to deploy!
+
+### Step 1: Initial Server Setup
 
 SSH into your droplet:
 ```bash
@@ -24,23 +28,28 @@ apt update && apt upgrade -y
 
 ---
 
-## Step 2: Install Node.js
+### Step 2: Install Docker and Docker Compose
 
-Install Node.js (v18 LTS recommended):
+Install Docker:
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-apt install -y nodejs
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh get-docker.sh
+```
+
+Install Docker Compose:
+```bash
+apt install -y docker-compose
 ```
 
 Verify installation:
 ```bash
-node --version
-npm --version
+docker --version
+docker-compose --version
 ```
 
 ---
 
-## Step 3: Install Git
+### Step 3: Install Git
 
 ```bash
 apt install -y git
@@ -48,7 +57,7 @@ apt install -y git
 
 ---
 
-## Step 4: Clone Your Repository
+### Step 4: Clone Your Repository
 
 Create app directory:
 ```bash
@@ -64,15 +73,28 @@ cd puggle
 
 ---
 
-## Step 5: Install Dependencies
+### Step 5: Build and Run with Docker
 
+Build and start the container:
 ```bash
-npm install
+docker-compose up -d --build
+```
+
+That's it! Your app is now running! 🎉
+
+Check if it's running:
+```bash
+docker-compose ps
+```
+
+View logs:
+```bash
+docker-compose logs -f
 ```
 
 ---
 
-## Step 6: Configure Firewall
+### Step 6: Configure Firewall
 
 Allow SSH, HTTP, and HTTPS:
 ```bash
@@ -88,57 +110,11 @@ Check firewall status:
 ufw status
 ```
 
----
-
-## Step 7: Test the Application
-
-Test run to make sure everything works:
-```bash
-npm start
-```
-
-Visit `http://your_droplet_ip:3000` in your browser.
-
-Press `Ctrl+C` to stop the test run.
+Test your app at `http://your_droplet_ip:3000`
 
 ---
 
-## Step 8: Install PM2 (Process Manager)
-
-Install PM2 globally:
-```bash
-npm install -g pm2
-```
-
-Start the application with PM2:
-```bash
-pm2 start server/index.js --name puggle
-```
-
-Save PM2 configuration:
-```bash
-pm2 save
-```
-
-Setup PM2 to start on boot:
-```bash
-pm2 startup systemd
-```
-
-**Copy and run the command that PM2 outputs!**
-
-Useful PM2 commands:
-```bash
-pm2 status              # Check app status
-pm2 logs puggle         # View logs
-pm2 restart puggle      # Restart app
-pm2 stop puggle         # Stop app
-pm2 delete puggle       # Remove from PM2
-```
-
----
-
-## Step 9: Install and Configure Nginx (Reverse Proxy)
+### Step 7: Install and Configure Nginx (Reverse Proxy)
 
 Install Nginx:
 ```bash
@@ -216,7 +192,7 @@ Now visit `http://your_droplet_ip` (without port 3000!)
 
 ---
 
-## Step 10: Setup SSL with Let's Encrypt (Optional but Recommended)
+### Step 8: Setup SSL with Let's Encrypt (Optional but Recommended)
 
 **Skip this if you don't have a domain name yet.**
 
@@ -244,75 +220,146 @@ certbot renew --dry-run
 
 ---
 
-## Step 11: Update Your Application
+### Step 9: Update Your Application
 
 To deploy updates in the future:
 
 ```bash
 cd /var/www/puggle
 git pull origin main
-npm install  # If dependencies changed
-pm2 restart puggle
+docker-compose down
+docker-compose up -d --build
+```
+
+Or use this one-liner:
+```bash
+cd /var/www/puggle && git pull origin main && docker-compose up -d --build
 ```
 
 ---
 
-## Quick Reference Commands
+### Docker Management Commands
 
 ```bash
-# Check app status
-pm2 status
+# Check container status
+docker-compose ps
 
-# View logs
-pm2 logs puggle
+# View logs (follow mode)
+docker-compose logs -f
 
-# Restart app
-pm2 restart puggle
+# View logs (last 100 lines)
+docker-compose logs --tail=100
 
-# Check Nginx status
-systemctl status nginx
+# Restart container
+docker-compose restart
 
-# Restart Nginx
-systemctl restart nginx
+# Stop container
+docker-compose stop
 
-# Check firewall
-ufw status
+# Start container
+docker-compose start
 
-# Monitor server resources
-htop
+# Stop and remove container
+docker-compose down
+
+# Rebuild and restart
+docker-compose up -d --build
+
+# Check container health
+docker inspect puggle-game | grep -A 5 Health
+
+# Access container shell (for debugging)
+docker exec -it puggle-game sh
+
+# View container resource usage
+docker stats puggle-game
 ```
 
 ---
 
-## Troubleshooting
+### Quick Reference Commands
 
-### App not starting
 ```bash
-pm2 logs puggle  # Check error logs
-pm2 restart puggle
+# App management
+docker-compose ps              # Check app status
+docker-compose logs -f         # View logs
+docker-compose restart         # Restart app
+docker-compose up -d --build   # Rebuild and restart
+
+# Nginx
+systemctl status nginx         # Check Nginx status
+systemctl restart nginx        # Restart Nginx
+
+# System
+ufw status                     # Check firewall
+htop                          # Monitor server resources
+df -h                         # Check disk space
+docker system prune -a        # Clean up Docker (careful!)
 ```
 
-### Port 3000 already in use
+---
+
+### Troubleshooting (Docker)
+
+#### Container not starting
 ```bash
+docker-compose logs puggle  # Check error logs
+docker-compose restart
+docker-compose down && docker-compose up -d  # Full restart
+```
+
+#### Port 3000 already in use
+```bash
+# Find what's using port 3000
 lsof -i :3000
+# or
+netstat -tulpn | grep 3000
+
+# Stop the Docker container
+docker-compose down
+
+# If something else is using it, kill that process
 kill -9 <PID>
-pm2 restart puggle
 ```
 
-### Nginx errors
+#### Container keeps restarting
+```bash
+docker-compose logs --tail=50  # Check recent logs
+docker inspect puggle-game     # Check container details
+```
+
+#### Out of disk space
+```bash
+df -h                          # Check disk usage
+docker system df               # Check Docker disk usage
+docker system prune -a         # Clean up (removes all unused images!)
+```
+
+#### Nginx errors
 ```bash
 nginx -t  # Test configuration
 tail -f /var/log/nginx/error.log  # View error logs
+systemctl status nginx
 ```
 
-### WebSocket connection issues
+#### WebSocket connection issues
 Make sure your Nginx config has the WebSocket headers and long timeout settings shown above.
 
-### Firewall blocking
+#### Firewall blocking
 ```bash
 ufw status
 ufw allow 80/tcp
 ufw allow 443/tcp
+ufw allow 3000/tcp
+```
+
+#### Reset everything (nuclear option)
+```bash
+cd /var/www/puggle
+docker-compose down
+docker system prune -a  # CAREFUL: removes all unused Docker images!
+git pull origin main
+docker-compose up -d --build
 ```
 
 ---
@@ -366,10 +413,69 @@ gzip_types text/plain text/css application/json application/javascript text/xml 
 
 ---
 
+## 📦 Method 2: Manual Deployment (Alternative)
+
+If you prefer not to use Docker, here's how to deploy manually with Node.js and PM2.
+
+<details>
+<summary>Click to expand manual deployment instructions</summary>
+
+### Prerequisites
+- Node.js 18+ installed
+- Git installed
+
+### Steps
+
+1. **Install Node.js**
+   ```bash
+   curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+   apt install -y nodejs
+   ```
+
+2. **Clone and setup**
+   ```bash
+   mkdir -p /var/www && cd /var/www
+   git clone https://github.com/keerthanpg/scrabble.git puggle
+   cd puggle
+   npm install
+   ```
+
+3. **Install PM2**
+   ```bash
+   npm install -g pm2
+   pm2 start server/index.js --name puggle
+   pm2 save
+   pm2 startup systemd  # Run the command it outputs!
+   ```
+
+4. **Configure Nginx** (same as Docker method above)
+
+5. **Update your app**
+   ```bash
+   cd /var/www/puggle
+   git pull origin main
+   npm install
+   pm2 restart puggle
+   ```
+
+### PM2 Commands
+```bash
+pm2 status              # Check status
+pm2 logs puggle         # View logs
+pm2 restart puggle      # Restart
+pm2 stop puggle         # Stop
+pm2 delete puggle       # Remove
+```
+
+</details>
+
+---
+
 ## Support
 
+- GitHub Repository: https://github.com/keerthanpg/scrabble
 - GitHub Issues: https://github.com/keerthanpg/scrabble/issues
-- Check PM2 logs: `pm2 logs puggle`
+- Check Docker logs: `docker-compose logs -f`
 - Check Nginx logs: `tail -f /var/log/nginx/error.log`
 
 ---
