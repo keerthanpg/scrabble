@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐶 Puggle - Pug Scrabble Game 🐾</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/board.css">
+  <link rel="stylesheet" href="css/ui.css">
+</head>
+<body>
+  <!-- Lobby Screen -->
+  <div id="lobby" class="screen active">
+    <div class="lobby-container">
+      <h1>PUGGLE GAME</h1>
+      <div class="lobby-content">
+        <div class="lobby-section">
+          <h2>Start A Pug Pack</h2>
+          <input type="text" id="createPlayerName" placeholder="Enter your pug name..." maxlength="20">
+          <button id="createGameBtn" class="btn btn-primary">Start Game</button>
+        </div>
+        <div class="divider">OR</div>
+        <div class="lobby-section">
+          <h2>Join The Pack</h2>
+          <input type="text" id="joinGameId" placeholder="Pack ID" maxlength="6">
+          <input type="text" id="joinPlayerName" placeholder="Enter your pug name..." maxlength="20">
+          <button id="joinGameBtn" class="btn btn-primary">Join Pack</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Waiting Screen -->
+  <div id="waiting" class="screen">
+    <div class="waiting-container">
+      <h1>Waiting for Pack Member...</h1>
+      <div class="game-id-display">
+        <p>Share this Pack ID with your friend:</p>
+        <div class="game-id" id="displayGameId">------</div>
+      </div>
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="game" class="screen">
+    <div class="game-container">
+      <!-- Game Header -->
+      <div class="game-header">
+        <div class="player-info" id="player1Info">
+          <div class="player-name" id="player1Name">Player 1</div>
+          <div class="player-score" id="player1Score">0</div>
+          <div class="player-timer" id="player1Timer">15:00</div>
+        </div>
+
+        <div class="game-info">
+          <div class="tiles-remaining" id="tilesRemaining">100 tiles</div>
+          <div class="turn-indicator" id="turnIndicator">Waiting...</div>
+        </div>
+
+        <div class="player-info" id="player2Info">
+          <div class="player-name" id="player2Name">Player 2</div>
+          <div class="player-score" id="player2Score">0</div>
+          <div class="player-timer" id="player2Timer">15:00</div>
+        </div>
+      </div>
+
+      <!-- Game Board -->
+      <div class="board-container">
+        <div id="board" class="board"></div>
+      </div>
+
+      <!-- Player Controls -->
+      <div class="controls-container">
+        <div class="tile-rack-container">
+          <div id="tileRack" class="tile-rack"></div>
+        </div>
+        <div class="action-buttons">
+          <button id="submitWordBtn" class="btn btn-success" disabled>Submit Word</button>
+          <button id="clearTilesBtn" class="btn btn-secondary" disabled>Clear</button>
+          <button id="passBtn" class="btn btn-secondary" disabled>Pass</button>
+        </div>
+      </div>
+
+      <!-- Notification Area -->
+      <div id="notification" class="notification"></div>
+    </div>
+  </div>
+
+  <!-- Game Over Screen -->
+  <div id="gameOver" class="screen">
+    <div class="game-over-container">
+      <h1>Puggle Over!</h1>
+      <div id="winnerDisplay" class="winner-display"></div>
+      <div id="finalScores" class="final-scores"></div>
+      <button id="newGameBtn" class="btn btn-primary">Play Again</button>
+    </div>
+  </div>
+
+  <!-- Socket.io -->
+  <script src="/socket.io/socket.io.js"></script>
+
+  <!-- Game Scripts -->
+  <script src="js/SocketManager.js"></script>
+  <script src="js/BoardRenderer.js"></script>
+  <script src="js/TileRack.js"></script>
+  <script src="js/TimerDisplay.js"></script>
+  <script src="js/GameUI.js"></script>
+  <script src="js/DragDropHandler.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

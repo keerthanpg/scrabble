@@ -1,0 +1,294 @@
+// Initialize components
+const socketManager = new SocketManager();
+const gameUI = new GameUI();
+const boardRenderer = new BoardRenderer(document.getElementById('board'));
+const tileRack = new TileRack(document.getElementById('tileRack'));
+const timerDisplay = new TimerDisplay();
+
+let dragDropHandler = null;
+let currentGameState = null;
+let myPlayerId = null;
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  setupLobbyHandlers();
+  setupSocketHandlers();
+  setupGameControls();
+});
+
+/**
+ * Setup lobby button handlers
+ */
+function setupLobbyHandlers() {
+  // Create game
+  document.getElementById('createGameBtn').addEventListener('click', () => {
+    const playerName = document.getElementById('createPlayerName').value.trim();
+
+    if (!playerName) {
+      gameUI.showNotification('Please enter your name', 'error');
+      return;
+    }
+
+    socketManager.createGame(playerName);
+  });
+
+  // Join game
+  document.getElementById('joinGameBtn').addEventListener('click', () => {
+    const gameId = document.getElementById('joinGameId').value.trim().toUpperCase();
+    const playerName = document.getElementById('joinPlayerName').value.trim();
+
+    if (!gameId || !playerName) {
+      gameUI.showNotification('Please enter game ID and your name', 'error');
+      return;
+    }
+
+    socketManager.joinGame(gameId, playerName);
+  });
+
+  // New game button (from game over screen)
+  document.getElementById('newGameBtn').addEventListener('click', () => {
+    location.reload();
+  });
+}
+
+/**
+ * Setup socket event handlers
+ */
+function setupSocketHandlers() {
+  // Game created
+  socketManager.on('gameCreated', (data) => {
+    myPlayerId = data.playerId;
+    gameUI.showGameId(data.gameId);
+    gameUI.showScreen('waiting');
+    gameUI.showNotification('Game created! Share the ID with your opponent.', 'success');
+  });
+
+  // Game joined
+  socketManager.on('gameJoined', (data) => {
+    myPlayerId = data.playerId;
+    gameUI.showScreen('waiting');
+    gameUI.showGameId(data.gameId);
+    gameUI.showNotification('Joined game! Waiting for game to start...', 'success');
+  });
+
+  // Game start
+  socketManager.on('gameStart', (data) => {
+    console.log('gameStart event received!', data);
+    currentGameState = data.gameState;
+
+    console.log('myPlayerId:', myPlayerId);
+    console.log('Rendering board...');
+
+    // Initialize board
+    boardRenderer.render(currentGameState.board);
+
+    console.log('Getting my player data...');
+    // Get my player data
+    const myPlayer = currentGameState.players.find(p => p.id === myPlayerId);
+    console.log('myPlayer:', myPlayer);
+
+    if (myPlayer) {
+      console.log('Rendering tile rack with:', myPlayer.rack);
+      tileRack.render(myPlayer.rack);
+    }
+
+    console.log('Initializing drag and drop...');
+    // Initialize drag and drop
+    dragDropHandler = new DragDropHandler(
+      boardRenderer,
+      tileRack,
+      handleTilePlaced,
+      handleTileReturned
+    );
+
+    console.log('Setting up timers...');
+    // Setup timers
+    currentGameState.players.forEach((player, index) => {
+      const timerElement = document.getElementById(`player${index + 1}Timer`);
+      timerDisplay.registerTimer(player.id, timerElement);
+      timerDisplay.updateTimer(player.id, player.timeRemaining);
+    });
+
+    console.log('Showing game screen...');
+    // Update UI
+    gameUI.showScreen('game');
+    gameUI.updatePlayers(currentGameState.players, myPlayerId);
+    gameUI.updateTilesRemaining(currentGameState.tilesRemaining);
+
+    const currentPlayer = currentGameState.players.find(p => p.isActive);
+    gameUI.updateTurnIndicator(currentPlayer.id, currentPlayer.name, myPlayerId);
+    timerDisplay.setActivePlayer(currentPlayer.id);
+
+    updateControls();
+
+    gameUI.showNotification('Game started! Good luck!', 'success');
+  });
+
+  // Game state update
+  socketManager.on('gameStateUpdate', (data) => {
+    currentGameState = data;
+
+    // Update board
+    boardRenderer.render(currentGameState.board);
+
+    // Update my rack
+    const myPlayer = currentGameState.players.find(p => p.id === myPlayerId);
+    if (myPlayer) {
+      tileRack.render(myPlayer.rack);
+    }
+
+    // Update UI
+    gameUI.updatePlayers(currentGameState.players, myPlayerId);
+    gameUI.updateTilesRemaining(currentGameState.tilesRemaining);
+
+    updateControls();
+  });
+
+  // Turn changed
+  socketManager.on('turnChanged', (data) => {
+    const currentPlayer = currentGameState.players.find(p => p.id === data.currentPlayerId);
+    if (currentPlayer) {
+      gameUI.updateTurnIndicator(data.currentPlayerId, currentPlayer.name, myPlayerId);
+      timerDisplay.setActivePlayer(data.currentPlayerId);
+    }
+
+    updateControls();
+
+    if (data.currentPlayerId === myPlayerId) {
+      gameUI.showNotification("It's your turn!", 'info');
+    }
+  });
+
+  // Timer update
+  socketManager.on('timerUpdate', (data) => {
+    timerDisplay.updateTimer(data.playerId, data.timeRemaining);
+  });
+
+  // Word validated
+  socketManager.on('wordValidated', (data) => {
+    if (data.valid) {
+      const wordsStr = data.words.join(', ');
+      gameUI.showNotification(`Valid! "${wordsStr}" scored ${data.score} points!`, 'success', 4000);
+
+      // Clear pending tiles
+      boardRenderer.clearPendingTiles();
+    } else {
+      gameUI.showNotification(`Invalid: ${data.error}`, 'error', 4000);
+      boardRenderer.clearPendingTiles();
+
+      // Restore rack
+      const myPlayer = currentGameState.players.find(p => p.id === myPlayerId);
+      if (myPlayer) {
+        tileRack.render(myPlayer.rack);
+      }
+    }
+
+    updateControls();
+  });
+
+  // Player passed
+  socketManager.on('playerPassed', (data) => {
+    const message = data.playerId === myPlayerId
+      ? 'You passed your turn'
+      : `${data.playerName} passed their turn`;
+    gameUI.showNotification(message, 'info');
+  });
+
+  // Player disconnected
+  socketManager.on('playerDisconnected', (data) => {
+    gameUI.showNotification(`${data.playerName} disconnected. You win by default!`, 'info', 10000);
+  });
+
+  // Game over
+  socketManager.on('gameOver', (data) => {
+    gameUI.showGameOver(data.winner, data.finalScores, data.reason);
+  });
+
+  // Error
+  socketManager.on('error', (data) => {
+    gameUI.showNotification(data.message, 'error');
+  });
+}
+
+/**
+ * Setup game control button handlers
+ */
+function setupGameControls() {
+  // Submit word
+  document.getElementById('submitWordBtn').addEventListener('click', () => {
+    const pendingTiles = boardRenderer.getPendingTiles();
+
+    if (pendingTiles.length === 0) {
+      gameUI.showNotification('No tiles placed', 'error');
+      return;
+    }
+
+    // Send to server
+    socketManager.placeTiles(pendingTiles);
+
+    // Small delay then submit
+    setTimeout(() => {
+      socketManager.submitWord();
+    }, 100);
+  });
+
+  // Clear tiles
+  document.getElementById('clearTilesBtn').addEventListener('click', () => {
+    // Get pending tiles
+    const pendingTiles = boardRenderer.getPendingTiles();
+
+    // Clear from board
+    boardRenderer.clearPendingTiles();
+
+    // Restore to rack
+    const myPlayer = currentGameState.players.find(p => p.id === myPlayerId);
+    if (myPlayer) {
+      tileRack.render(myPlayer.rack);
+    }
+
+    updateControls();
+    gameUI.showNotification('Tiles cleared', 'info');
+  });
+
+  // Pass turn
+  document.getElementById('passBtn').addEventListener('click', () => {
+    const confirmed = confirm('Are you sure you want to pass your turn?');
+
+    if (confirmed) {
+      socketManager.passTurn();
+    }
+  });
+}
+
+/**
+ * Handle tile placed on board
+ * @param {object} tile
+ */
+function handleTilePlaced(tile) {
+  updateControls();
+}
+
+/**
+ * Handle tile returned to rack
+ * @param {object} tile
+ */
+function handleTileReturned(tile) {
+  updateControls();
+}
+
+/**
+ * Update control button states
+ */
+function updateControls() {
+  if (!currentGameState) return;
+
+  const isMyTurn = currentGameState.currentPlayerId === myPlayerId;
+  const hasPendingTiles = boardRenderer.getPendingTiles().length > 0;
+
+  gameUI.updateControls(isMyTurn, hasPendingTiles);
+
+  // Enable/disable drag and drop
+  if (dragDropHandler) {
+    dragDropHandler.setEnabled(isMyTurn);
+  }
+}
