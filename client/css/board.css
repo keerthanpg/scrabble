@@ -99,12 +99,12 @@
 }
 
 .board-cell.bonus-tw::before {
-  content: '🦴\ATRIPLE\AWORD';
-  white-space: pre;
-  font-size: 7px;
-  line-height: 1.3;
+  content: '3W';
+  font-size: 14px;
+  font-weight: 900;
   text-align: center;
-  font-weight: 800;
+  font-family: 'Baloo 2', sans-serif;
+  letter-spacing: 0.5px;
 }
 
 .board-cell.bonus-dw {
@@ -115,12 +115,12 @@
 }
 
 .board-cell.bonus-dw::before {
-  content: '🐾\ADOUBLE\AWORD';
-  white-space: pre;
-  font-size: 7px;
-  line-height: 1.3;
+  content: '2W';
+  font-size: 14px;
+  font-weight: 900;
   text-align: center;
-  font-weight: 800;
+  font-family: 'Baloo 2', sans-serif;
+  letter-spacing: 0.5px;
 }
 
 .board-cell.bonus-tl {
@@ -131,12 +131,12 @@
 }
 
 .board-cell.bonus-tl::before {
-  content: '3x\ALETTER';
-  white-space: pre;
-  font-size: 8px;
-  line-height: 1.3;
+  content: '3L';
+  font-size: 14px;
+  font-weight: 900;
   text-align: center;
-  font-weight: 800;
+  font-family: 'Baloo 2', sans-serif;
+  letter-spacing: 0.5px;
 }
 
 .board-cell.bonus-dl {
@@ -147,12 +147,12 @@
 }
 
 .board-cell.bonus-dl::before {
-  content: '2x\ALETTER';
-  white-space: pre;
-  font-size: 8px;
-  line-height: 1.3;
+  content: '2L';
+  font-size: 14px;
+  font-weight: 900;
   text-align: center;
-  font-weight: 800;
+  font-family: 'Baloo 2', sans-serif;
+  letter-spacing: 0.5px;
 }
 
 /* Center square is now just a DW square (handled by .bonus-dw class) */
