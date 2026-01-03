@@ -1,11 +1,12 @@
 /* Game Screen Layout */
 .game-container {
-  max-width: 1400px;
+  max-width: 100%;
+  width: fit-content;
   margin: 0 auto;
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(255, 245, 230, 0.95));
-  border-radius: 35px;
-  padding: 30px;
+  border-radius: 25px;
+  padding: 15px;
   box-shadow:
     0 20px 60px var(--shadow),
     0 0 0 8px rgba(255, 179, 186, 0.2);
@@ -44,11 +45,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30px;
+  gap: 10px;
+  padding: 15px;
   background:
     linear-gradient(145deg, rgba(255, 245, 230, 0.8), rgba(255, 235, 210, 0.9));
-  border-radius: 28px;
-  margin-bottom: 30px;
+  border-radius: 20px;
+  margin-bottom: 15px;
   border: 4px solid var(--pug-wrinkle);
   box-shadow:
     0 6px 20px rgba(93, 64, 55, 0.2),
@@ -58,14 +60,14 @@
 .player-info {
   flex: 1;
   text-align: center;
-  padding: 25px;
+  padding: 12px 15px;
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 245, 230, 0.9));
-  border-radius: 25px;
+  border-radius: 18px;
   box-shadow:
     0 6px 15px rgba(93, 64, 55, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  border: 4px solid var(--pug-wrinkle);
+  border: 3px solid var(--pug-wrinkle);
   position: relative;
   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
@@ -73,18 +75,18 @@
 .player-info::before {
   content: '🐾';
   position: absolute;
-  top: -20px;
+  top: -15px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 32px;
+  font-size: 24px;
   background: linear-gradient(135deg, var(--pug-peach), var(--pug-pink));
-  width: 48px;
-  height: 48px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 3px solid var(--pug-dark);
+  border: 2px solid var(--pug-dark);
   box-shadow: 0 4px 12px var(--shadow);
 }
 
@@ -111,25 +113,25 @@
 }
 
 .player-name {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 800;
   font-family: 'Baloo 2', sans-serif;
   color: var(--pug-dark);
-  margin-bottom: 15px;
+  margin-bottom: 8px;
   text-shadow:
     1px 1px 0 var(--pug-pink),
     2px 2px 0 var(--pug-peach);
 }
 
 .player-score {
-  font-size: 46px;
+  font-size: 32px;
   font-weight: 900;
   font-family: 'Baloo 2', sans-serif;
   color: var(--pug-brown);
-  margin-bottom: 15px;
+  margin-bottom: 8px;
   text-shadow:
     2px 2px 0 var(--pug-pink),
-    4px 4px 0 var(--pug-peach);
+    3px 3px 0 var(--pug-peach);
   animation: scoreFloat 3s ease-in-out infinite;
 }
 
@@ -139,13 +141,13 @@
 }
 
 .player-timer {
-  font-size: 28px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--pug-dark);
   font-family: 'Courier New', monospace;
   background: linear-gradient(135deg, var(--pug-tan), var(--pug-snout));
-  padding: 8px 18px;
-  border-radius: 18px;
+  padding: 5px 12px;
+  border-radius: 12px;
   display: inline-block;
   border: 2px solid var(--pug-wrinkle);
   box-shadow:
@@ -180,37 +182,37 @@
 .game-info {
   flex: 1;
   text-align: center;
-  padding: 0 20px;
+  padding: 0 10px;
 }
 
 .tiles-remaining {
-  font-size: 18px;
+  font-size: 14px;
   color: #4a3728;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   font-weight: 700;
   background: linear-gradient(145deg, #f4d7c0, #e4c7b0);
-  padding: 8px 20px;
-  border-radius: 15px;
+  padding: 5px 12px;
+  border-radius: 12px;
   display: inline-block;
   border: 2px solid #d4a574;
 }
 
 .tiles-remaining::before {
   content: '🦴 ';
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .turn-indicator {
-  font-size: 26px;
+  font-size: 18px;
   font-weight: 900;
   font-family: 'Baloo 2', sans-serif;
   color: var(--pug-dark);
-  padding: 14px 30px;
+  padding: 8px 18px;
   background:
     linear-gradient(135deg, rgba(255, 245, 230, 0.9), rgba(255, 235, 210, 0.95));
-  border-radius: 25px;
+  border-radius: 18px;
   display: inline-block;
-  border: 4px solid var(--pug-wrinkle);
+  border: 3px solid var(--pug-wrinkle);
   box-shadow:
     0 5px 15px rgba(93, 64, 55, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
@@ -256,10 +258,10 @@
 
 /* Controls */
 .controls-container {
-  padding: 25px;
+  padding: 15px;
   background: linear-gradient(145deg, #f4e8d8, #e4d8c8);
-  border-radius: 20px;
-  margin-top: 25px;
+  border-radius: 18px;
+  margin-top: 15px;
   border: 3px solid #d4a574;
   box-shadow: 0 4px 15px rgba(139, 111, 71, 0.15);
 }
@@ -267,8 +269,8 @@
 .action-buttons {
   display: flex;
   justify-content: center;
-  gap: 15px;
-  margin-top: 20px;
+  gap: 10px;
+  margin-top: 15px;
   flex-wrap: wrap;
 }
 

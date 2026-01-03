@@ -3,8 +3,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 25px;
-  margin: 25px 0;
+  padding: 10px;
+  margin: 15px 0;
   position: relative;
 }
 
@@ -36,22 +36,22 @@
 
 .board {
   display: grid;
-  grid-template-columns: repeat(15, 40px);
-  grid-template-rows: repeat(15, 40px);
+  grid-template-columns: repeat(15, 35px);
+  grid-template-rows: repeat(15, 35px);
   gap: 2px;
   background: var(--pug-brown);
-  border: 6px solid var(--pug-dark);
+  border: 5px solid var(--pug-dark);
   box-shadow:
     0 10px 35px var(--shadow),
     inset 0 2px 10px rgba(0, 0, 0, 0.2);
-  border-radius: 12px;
-  padding: 4px;
+  border-radius: 10px;
+  padding: 3px;
 }
 
 /* Board Cells */
 .board-cell {
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   background: linear-gradient(145deg, var(--pug-cream), #FAF0E6);
   display: flex;
   align-items: center;
@@ -63,7 +63,7 @@
   color: var(--pug-brown);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  border-radius: 5px;
+  border-radius: 4px;
   border: 1px solid var(--pug-wrinkle);
   box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.5);
 }
@@ -100,7 +100,7 @@
 
 .board-cell.bonus-tw::before {
   content: '3W';
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 900;
   text-align: center;
   font-family: 'Baloo 2', sans-serif;
@@ -116,7 +116,7 @@
 
 .board-cell.bonus-dw::before {
   content: '2W';
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 900;
   text-align: center;
   font-family: 'Baloo 2', sans-serif;
@@ -132,7 +132,7 @@
 
 .board-cell.bonus-tl::before {
   content: '3L';
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 900;
   text-align: center;
   font-family: 'Baloo 2', sans-serif;
@@ -148,7 +148,7 @@
 
 .board-cell.bonus-dl::before {
   content: '2L';
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 900;
   text-align: center;
   font-family: 'Baloo 2', sans-serif;
@@ -159,16 +159,16 @@
 
 /* Tiles on Board */
 .board-cell .tile {
-  width: 38px;
-  height: 38px;
+  width: 33px;
+  height: 33px;
   background: linear-gradient(145deg, var(--pug-cream), #FAF0E6);
   border: 3px solid var(--pug-brown);
-  border-radius: 10px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 900;
   color: var(--pug-dark);
   box-shadow:
@@ -220,8 +220,8 @@
 .tile-points {
   position: absolute;
   bottom: 1px;
-  right: 3px;
-  font-size: 11px;
+  right: 2px;
+  font-size: 10px;
   font-weight: 900;
   color: #8b6f47;
   z-index: 10;
@@ -232,53 +232,53 @@
 .tile-rack-container {
   display: flex;
   justify-content: center;
-  margin: 20px 0;
+  margin: 15px 0;
   position: relative;
 }
 
 .tile-rack-container::before {
   content: '🦴';
   position: absolute;
-  left: 10px;
+  left: 5px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 35px;
+  font-size: 28px;
   opacity: 0.4;
 }
 
 .tile-rack-container::after {
   content: '🦴';
   position: absolute;
-  right: 10px;
+  right: 5px;
   top: 50%;
   transform: translateY(-50%) rotate(180deg);
-  font-size: 35px;
+  font-size: 28px;
   opacity: 0.4;
 }
 
 .tile-rack {
   display: flex;
-  gap: 14px;
-  padding: 25px 30px;
+  gap: 10px;
+  padding: 18px 22px;
   background: linear-gradient(145deg, var(--pug-brown), var(--pug-dark));
-  border-radius: 30px;
+  border-radius: 25px;
   box-shadow:
     0 8px 25px var(--shadow),
     inset 0 2px 8px rgba(0, 0, 0, 0.3);
-  border: 5px solid var(--pug-dark);
+  border: 4px solid var(--pug-dark);
 }
 
 .tile-rack .tile {
-  width: 54px;
-  height: 54px;
+  width: 48px;
+  height: 48px;
   background: linear-gradient(145deg, var(--pug-cream), #FAF0E6);
   border: 3px solid var(--pug-wrinkle);
-  border-radius: 12px;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 900;
   color: var(--pug-dark);
   cursor: grab;
