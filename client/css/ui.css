@@ -12,6 +12,13 @@
     0 0 0 8px rgba(255, 179, 186, 0.2);
   border: 6px solid var(--pug-pink);
   position: relative;
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  grid-template-rows: auto auto;
+  gap: 15px;
+  grid-template-areas:
+    "player1 board player2"
+    "controls controls controls";
 }
 
 .game-container::before {
@@ -40,27 +47,25 @@
   50% { transform: translateX(-50%) scale(1.05); }
 }
 
-/* Game Header */
+/* Game Header - hide as we're using grid */
 .game-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  padding: 15px;
-  background:
-    linear-gradient(145deg, rgba(255, 245, 230, 0.8), rgba(255, 235, 210, 0.9));
-  border-radius: 20px;
-  margin-bottom: 15px;
-  border: 4px solid var(--pug-wrinkle);
-  box-shadow:
-    0 6px 20px rgba(93, 64, 55, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  display: contents;
 }
 
+/* Player 1 on left */
+#player1Info {
+  grid-area: player1;
+}
+
+/* Player 2 on right */
+#player2Info {
+  grid-area: player2;
+}
+
+/* Side panels for player info */
 .player-info {
-  flex: 1;
   text-align: center;
-  padding: 12px 15px;
+  padding: 15px;
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 245, 230, 0.9));
   border-radius: 18px;
@@ -70,6 +75,9 @@
   border: 3px solid var(--pug-wrinkle);
   position: relative;
   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .player-info::before {
@@ -179,10 +187,31 @@
   }
 }
 
+/* Center column with board */
+.board-container {
+  grid-area: board;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  position: relative;
+}
+
 .game-info {
-  flex: 1;
   text-align: center;
-  padding: 0 10px;
+  padding: 10px 15px;
+  background:
+    linear-gradient(145deg, rgba(255, 245, 230, 0.8), rgba(255, 235, 210, 0.9));
+  border-radius: 15px;
+  border: 3px solid var(--pug-wrinkle);
+  box-shadow:
+    0 6px 20px rgba(93, 64, 55, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-self: stretch;
 }
 
 .tiles-remaining {
@@ -258,10 +287,10 @@
 
 /* Controls */
 .controls-container {
+  grid-area: controls;
   padding: 15px;
   background: linear-gradient(145deg, #f4e8d8, #e4d8c8);
   border-radius: 18px;
-  margin-top: 15px;
   border: 3px solid #d4a574;
   box-shadow: 0 4px 15px rgba(139, 111, 71, 0.15);
 }
@@ -421,14 +450,17 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .game-header {
-    flex-direction: column;
-    gap: 15px;
+  .game-container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "player1"
+      "board"
+      "player2"
+      "controls";
   }
 
-  .player-info,
-  .game-info {
-    width: 100%;
+  .player-info {
+    max-width: 100%;
   }
 }
 
