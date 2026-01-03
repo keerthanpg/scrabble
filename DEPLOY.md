@@ -373,6 +373,22 @@ ufw allow 443/tcp
 ufw allow 3000/tcp
 ```
 
+#### ContainerConfig KeyError
+This happens when updating an existing deployment with new volumes:
+```bash
+# Stop and remove containers
+docker-compose down
+
+# Remove old images
+docker rmi chinniproject_puggle puggle-game 2>/dev/null || true
+
+# Rebuild from scratch
+docker-compose build --no-cache
+
+# Start fresh
+docker-compose up -d
+```
+
 #### Reset everything (nuclear option)
 ```bash
 cd /var/www/puggle
