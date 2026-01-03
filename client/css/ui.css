@@ -47,11 +47,6 @@
   50% { transform: translateX(-50%) scale(1.05); }
 }
 
-/* Game Header - hide as we're using grid */
-.game-header {
-  display: contents;
-}
-
 /* Player 1 on left */
 #player1Info {
   grid-area: player1;

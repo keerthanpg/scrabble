@@ -45,32 +45,30 @@
   <!-- Game Screen -->
   <div id="game" class="screen">
     <div class="game-container">
-      <!-- Game Header -->
-      <div class="game-header">
-        <div class="player-info" id="player1Info">
-          <div class="player-name" id="player1Name">Player 1</div>
-          <div class="player-score" id="player1Score">0</div>
-          <div class="player-timer" id="player1Timer">15:00</div>
-        </div>
+      <!-- Player 1 Info (Left Side) -->
+      <div class="player-info" id="player1Info">
+        <div class="player-name" id="player1Name">Player 1</div>
+        <div class="player-score" id="player1Score">0</div>
+        <div class="player-timer" id="player1Timer">15:00</div>
+      </div>
 
+      <!-- Game Board (Center) -->
+      <div class="board-container">
         <div class="game-info">
           <div class="tiles-remaining" id="tilesRemaining">100 tiles</div>
           <div class="turn-indicator" id="turnIndicator">Waiting...</div>
         </div>
-
-        <div class="player-info" id="player2Info">
-          <div class="player-name" id="player2Name">Player 2</div>
-          <div class="player-score" id="player2Score">0</div>
-          <div class="player-timer" id="player2Timer">15:00</div>
-        </div>
-      </div>
-
-      <!-- Game Board -->
-      <div class="board-container">
         <div id="board" class="board"></div>
       </div>
 
-      <!-- Player Controls -->
+      <!-- Player 2 Info (Right Side) -->
+      <div class="player-info" id="player2Info">
+        <div class="player-name" id="player2Name">Player 2</div>
+        <div class="player-score" id="player2Score">0</div>
+        <div class="player-timer" id="player2Timer">15:00</div>
+      </div>
+
+      <!-- Player Controls (Bottom - Full Width) -->
       <div class="controls-container">
         <div class="tile-rack-container">
           <div id="tileRack" class="tile-rack"></div>
