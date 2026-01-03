@@ -16,6 +16,7 @@ COPY . .
 # Create a non-root user for security
 RUN addgroup -g 1001 -S puggle && \
     adduser -S puggle -u 1001 && \
+    mkdir -p /app/data && \
     chown -R puggle:puggle /app
 
 # Switch to non-root user

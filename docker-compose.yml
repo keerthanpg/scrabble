@@ -9,6 +9,8 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+    volumes:
+      - ratings-data:/app/data
     healthcheck:
       test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
       interval: 30s
@@ -17,6 +19,9 @@ services:
       start_period: 40s
     networks:
       - puggle-network
+
+volumes:
+  ratings-data:
 
 networks:
   puggle-network:

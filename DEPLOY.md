@@ -2,6 +2,14 @@
 
 Complete guide to deploy your pug-themed Puggle game on a Digital Ocean droplet using Docker.
 
+## Features
+
+- 🎮 **Matchmaking System**: Players can find and play against strangers with skill-based matchmaking
+- ⭐ **ELO Rating System**: Automatic skill ratings that persist across games
+- 🎯 **Smart Matching**: Matches players with similar ratings (±150 → ±300 → anyone after 60s)
+- 🐾 **Pug-Themed UI**: Beautiful, playful design with animations
+- 🎲 **Classic Scrabble**: Full Scrabble game with 15x15 board and 178,000+ word dictionary
+
 ## Prerequisites
 
 - Digital Ocean droplet (Ubuntu 20.04 or 22.04 recommended)
@@ -82,6 +90,8 @@ docker-compose up -d --build
 
 That's it! Your app is now running! 🎉
 
+**Note:** Player ratings are automatically persisted in a Docker volume. This means ratings will survive container restarts and updates!
+
 Check if it's running:
 ```bash
 docker-compose ps
@@ -90,6 +100,11 @@ docker-compose ps
 View logs:
 ```bash
 docker-compose logs -f
+```
+
+Check ratings data:
+```bash
+docker exec puggle-game cat /app/data/ratings.json
 ```
 
 ---
@@ -259,7 +274,7 @@ docker-compose stop
 # Start container
 docker-compose start
 
-# Stop and remove container
+# Stop and remove container (keeps ratings data)
 docker-compose down
 
 # Rebuild and restart
@@ -273,6 +288,11 @@ docker exec -it puggle-game sh
 
 # View container resource usage
 docker stats puggle-game
+
+# Ratings data management
+docker exec puggle-game cat /app/data/ratings.json  # View ratings
+docker volume ls                                     # List volumes
+docker volume inspect chinniproject_ratings-data    # Inspect ratings volume
 ```
 
 ---
