@@ -137,12 +137,21 @@ function setupSocketHandlers() {
     );
 
     console.log('Setting up timers...');
-    // Setup timers
-    currentGameState.players.forEach((player, index) => {
-      const timerElement = document.getElementById(`player${index + 1}Timer`);
-      timerDisplay.registerTimer(player.id, timerElement);
-      timerDisplay.updateTimer(player.id, player.timeRemaining);
-    });
+    // Setup timers - match with how updatePlayers assigns them
+    const me = currentGameState.players.find(p => p.id === myPlayerId);
+    const opponent = currentGameState.players.find(p => p.id !== myPlayerId);
+
+    if (me) {
+      const myTimerElement = document.getElementById('player1Timer');
+      timerDisplay.registerTimer(me.id, myTimerElement);
+      timerDisplay.updateTimer(me.id, me.timeRemaining);
+    }
+
+    if (opponent) {
+      const opponentTimerElement = document.getElementById('player2Timer');
+      timerDisplay.registerTimer(opponent.id, opponentTimerElement);
+      timerDisplay.updateTimer(opponent.id, opponent.timeRemaining);
+    }
 
     console.log('Showing game screen...');
     // Update UI
