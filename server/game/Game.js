@@ -4,9 +4,10 @@ const ScoreCalculator = require('./ScoreCalculator');
 const { DEFAULT_TIMER_MS, TIMER_UPDATE_INTERVAL_MS, CHALLENGE_PENALTY } = require('../config/scrabbleConfig');
 
 class Game {
-  constructor(gameId, wordValidator, io) {
+  constructor(gameId, wordValidator, io, ratingManager = null) {
     this.gameId = gameId;
     this.io = io;
+    this.ratingManager = ratingManager;
     this.status = 'waiting'; // 'waiting', 'active', 'finished'
     this.players = [];
     this.board = new Board();
@@ -424,6 +425,14 @@ class Game {
     } else {
       const [p1, p2] = this.players;
       winner = p1.score >= p2.score ? p1 : p2;
+    }
+
+    // Update ELO ratings if ratingManager is available
+    const loser = this.players.find(p => p.id !== winner.id);
+    if (this.ratingManager && loser) {
+      this.ratingManager.updateRatings(winner.id, loser.id).catch(error => {
+        console.error('Failed to update ratings:', error);
+      });
     }
 
     this.io.to(this.gameId).emit('gameOver', {

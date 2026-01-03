@@ -14,6 +14,13 @@
     <div class="lobby-container">
       <h1>PUGGLE GAME</h1>
       <div class="lobby-content">
+        <div class="lobby-section lobby-featured">
+          <h2>Find A Match</h2>
+          <p class="lobby-description">Play against another pug online!</p>
+          <input type="text" id="findMatchPlayerName" placeholder="Enter your pug name..." maxlength="20">
+          <button id="findMatchBtn" class="btn btn-primary btn-featured">Find Match</button>
+        </div>
+        <div class="divider">OR</div>
         <div class="lobby-section">
           <h2>Start A Pug Pack</h2>
           <input type="text" id="createPlayerName" placeholder="Enter your pug name..." maxlength="20">
@@ -39,6 +46,23 @@
         <div class="game-id" id="displayGameId">------</div>
       </div>
       <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Matchmaking Screen -->
+  <div id="matchmaking" class="screen">
+    <div class="matchmaking-container">
+      <h1>Finding Your Pack Match...</h1>
+      <div class="spinner"></div>
+      <p id="matchmakingStatus" class="matchmaking-status">Searching for players with similar ratings...</p>
+      <div class="rating-display">
+        <div class="rating-label">Your Rating</div>
+        <div class="rating-value" id="ratingValue">1000</div>
+        <div class="rating-stats">
+          <span id="ratingStats">New Player</span>
+        </div>
+      </div>
+      <button id="cancelMatchBtn" class="btn btn-secondary">Cancel Search</button>
     </div>
   </div>
 

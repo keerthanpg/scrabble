@@ -4,6 +4,8 @@ const socketIO = require('socket.io');
 const path = require('path');
 const GameManager = require('./game/GameManager');
 const WordValidator = require('./game/WordValidator');
+const RatingManager = require('./rating/RatingManager');
+const MatchmakingQueue = require('./matchmaking/MatchmakingQueue');
 
 const app = express();
 const server = http.createServer(app);
@@ -26,8 +28,15 @@ wordValidator.loadDictionary(dictionaryPath)
   .then(() => {
     console.log('Dictionary loaded successfully');
 
-    // Initialize game manager
-    const gameManager = new GameManager(io, wordValidator);
+    // Initialize rating manager
+    const ratingsFilePath = path.join(__dirname, '../data/ratings.json');
+    const ratingManager = new RatingManager(ratingsFilePath);
+
+    // Initialize game manager with rating manager
+    const gameManager = new GameManager(io, wordValidator, ratingManager);
+
+    // Initialize matchmaking queue
+    const matchmakingQueue = new MatchmakingQueue(gameManager, ratingManager);
 
     // Socket.io connection handling
     io.on('connection', (socket) => {
@@ -61,9 +70,40 @@ wordValidator.loadDictionary(dictionaryPath)
         gameManager.handlePass(socket);
       });
 
+      // Matchmaking events
+      socket.on('findMatch', (data) => {
+        const { playerName } = data;
+        const playerRating = ratingManager.getRating(socket.id);
+        const result = matchmakingQueue.addToQueue(socket, playerName, playerRating.rating);
+
+        if (result.success) {
+          socket.emit('matchmakingStarted', {
+            rating: playerRating.rating,
+            gamesPlayed: playerRating.gamesPlayed,
+            wins: playerRating.wins,
+            losses: playerRating.losses
+          });
+          console.log(`${playerName} (${socket.id}) entered matchmaking queue with rating ${playerRating.rating}`);
+        } else {
+          socket.emit('error', { message: result.message });
+        }
+      });
+
+      socket.on('cancelMatch', () => {
+        const removed = matchmakingQueue.removeFromQueue(socket.id);
+        if (removed) {
+          socket.emit('matchmakingCancelled');
+          console.log(`Player ${socket.id} left matchmaking queue`);
+        }
+      });
+
       // Disconnection
       socket.on('disconnect', () => {
         console.log('Player disconnected:', socket.id);
+
+        // Remove from matchmaking queue if in it
+        matchmakingQueue.removeFromQueue(socket.id);
+
         gameManager.handleDisconnect(socket);
       });
     });

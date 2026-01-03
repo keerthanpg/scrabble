@@ -2,9 +2,10 @@ const Game = require('./Game');
 const { randomBytes } = require('crypto');
 
 class GameManager {
-  constructor(io, wordValidator) {
+  constructor(io, wordValidator, ratingManager = null) {
     this.io = io;
     this.wordValidator = wordValidator;
+    this.ratingManager = ratingManager;
     this.games = new Map(); // gameId → Game instance
     this.playerToGame = new Map(); // socketId → gameId
   }
@@ -24,7 +25,7 @@ class GameManager {
    */
   async createGame(socket, playerName) {
     const gameId = this.generateGameId();
-    const game = new Game(gameId, this.wordValidator, this.io);
+    const game = new Game(gameId, this.wordValidator, this.io, this.ratingManager);
 
     // Store game and mapping
     this.games.set(gameId, game);
@@ -91,6 +92,57 @@ class GameManager {
     }
 
     console.log(`${playerName} (${socket.id}) added to game ${gameId}`);
+  }
+
+  /**
+   * Create a matched game for two players (used by matchmaking)
+   * @param {object} player1Socket - First player's socket
+   * @param {string} player1Name - First player's name
+   * @param {object} player2Socket - Second player's socket
+   * @param {string} player2Name - Second player's name
+   * @returns {string} - gameId
+   */
+  async createMatchedGame(player1Socket, player1Name, player2Socket, player2Name) {
+    const gameId = this.generateGameId();
+    const game = new Game(gameId, this.wordValidator, this.io, this.ratingManager);
+
+    // Store game
+    this.games.set(gameId, game);
+
+    // Store mappings for both players
+    this.playerToGame.set(player1Socket.id, gameId);
+    this.playerToGame.set(player2Socket.id, gameId);
+
+    // Join both sockets to room
+    await player1Socket.join(gameId);
+    await player2Socket.join(gameId);
+
+    console.log(`Both players joined room ${gameId}`);
+
+    // Notify player 1
+    player1Socket.emit('gameJoined', {
+      gameId: gameId,
+      playerId: player1Socket.id,
+      playerName: player1Name
+    });
+
+    // Notify player 2
+    player2Socket.emit('gameJoined', {
+      gameId: gameId,
+      playerId: player2Socket.id,
+      playerName: player2Name
+    });
+
+    // Small delay to ensure gameJoined is processed before gameStart
+    await new Promise(resolve => setTimeout(resolve, 10));
+
+    // Add both players
+    game.addPlayer(player1Socket.id, player1Name);
+    game.addPlayer(player2Socket.id, player2Name);
+
+    console.log(`Matched game ${gameId} created: ${player1Name} vs ${player2Name}`);
+
+    return gameId;
   }
 
   /**

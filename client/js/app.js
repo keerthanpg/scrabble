@@ -20,6 +20,24 @@ document.addEventListener('DOMContentLoaded', () => {
  * Setup lobby button handlers
  */
 function setupLobbyHandlers() {
+  // Find match
+  document.getElementById('findMatchBtn').addEventListener('click', () => {
+    const playerName = document.getElementById('findMatchPlayerName').value.trim();
+
+    if (!playerName) {
+      gameUI.showNotification('Please enter your name', 'error');
+      return;
+    }
+
+    socketManager.findMatch(playerName);
+  });
+
+  // Cancel matchmaking
+  document.getElementById('cancelMatchBtn').addEventListener('click', () => {
+    socketManager.cancelMatch();
+    gameUI.showScreen('lobby');
+  });
+
   // Create game
   document.getElementById('createGameBtn').addEventListener('click', () => {
     const playerName = document.getElementById('createPlayerName').value.trim();
@@ -69,6 +87,23 @@ function setupSocketHandlers() {
     gameUI.showScreen('waiting');
     gameUI.showGameId(data.gameId);
     gameUI.showNotification('Joined game! Waiting for game to start...', 'success');
+  });
+
+  // Matchmaking started
+  socketManager.on('matchmakingStarted', (data) => {
+    gameUI.showMatchmaking(data.rating, data.gamesPlayed, data.wins, data.losses);
+    gameUI.showNotification('Finding a match...', 'info');
+  });
+
+  // Match found
+  socketManager.on('matchFound', (data) => {
+    gameUI.showNotification(`Match found! Playing against ${data.opponent}`, 'success', 3000);
+  });
+
+  // Matchmaking cancelled
+  socketManager.on('matchmakingCancelled', () => {
+    gameUI.showScreen('lobby');
+    gameUI.showNotification('Matchmaking cancelled', 'info');
   });
 
   // Game start

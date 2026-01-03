@@ -53,6 +53,21 @@ class SocketManager {
   }
 
   /**
+   * Find a match (matchmaking)
+   * @param {string} playerName
+   */
+  findMatch(playerName) {
+    this.emit('findMatch', { playerName });
+  }
+
+  /**
+   * Cancel matchmaking
+   */
+  cancelMatch() {
+    this.emit('cancelMatch');
+  }
+
+  /**
    * Place tiles on the board
    * @param {Array} tiles
    */

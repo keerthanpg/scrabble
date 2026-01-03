@@ -613,3 +613,177 @@ input[type="text"]:focus {
   font-size: 20px;
   margin-right: 5px;
 }
+
+/* Matchmaking Screen */
+.matchmaking-container {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(255, 245, 230, 0.95));
+  border-radius: 40px;
+  padding: 70px 50px;
+  box-shadow:
+    0 20px 60px var(--shadow),
+    0 0 0 8px rgba(255, 179, 186, 0.2);
+  text-align: center;
+  max-width: 520px;
+  border: 5px solid var(--pug-pink);
+  position: relative;
+  animation: lobbyEntrance 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.matchmaking-container::before {
+  content: '🎮';
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 60px;
+  background: linear-gradient(135deg, var(--pug-pink), var(--pug-peach));
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 5px solid var(--pug-dark);
+  box-shadow:
+    0 8px 25px var(--shadow),
+    0 0 0 5px rgba(255, 255, 255, 0.5);
+  animation: gamePulse 2s ease-in-out infinite;
+}
+
+@keyframes gamePulse {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+    box-shadow:
+      0 8px 25px var(--shadow),
+      0 0 0 5px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    transform: translateX(-50%) scale(1.1);
+    box-shadow:
+      0 10px 30px rgba(255, 179, 186, 0.4),
+      0 0 0 8px rgba(255, 179, 186, 0.3);
+  }
+}
+
+.matchmaking-container h1 {
+  color: var(--pug-brown);
+  margin-bottom: 30px;
+  font-size: 38px;
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  text-shadow:
+    2px 2px 0 var(--pug-pink),
+    4px 4px 0 var(--pug-peach);
+  animation: titleWiggle 3s ease-in-out infinite;
+}
+
+.matchmaking-status {
+  color: var(--pug-brown);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 25px 0;
+  opacity: 0.9;
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 1; }
+}
+
+.rating-display {
+  margin: 35px 0;
+  padding: 25px;
+  background: linear-gradient(145deg, #fff, #f9f3ed);
+  border-radius: 20px;
+  border: 3px solid var(--pug-wrinkle);
+  box-shadow:
+    0 6px 20px rgba(93, 64, 55, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.rating-label {
+  color: var(--pug-brown);
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'Baloo 2', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 10px;
+}
+
+.rating-label::before {
+  content: '⭐ ';
+  font-size: 18px;
+}
+
+.rating-value {
+  color: var(--pug-brown);
+  font-size: 56px;
+  font-weight: 900;
+  font-family: 'Baloo 2', sans-serif;
+  text-shadow:
+    2px 2px 0 var(--pug-pink),
+    3px 3px 0 var(--pug-peach);
+  margin: 10px 0;
+  animation: ratingFloat 3s ease-in-out infinite;
+}
+
+@keyframes ratingFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.rating-stats {
+  color: var(--pug-wrinkle);
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+/* Lobby Featured Section */
+.lobby-featured {
+  border: 4px solid var(--pug-pink);
+  background: linear-gradient(145deg, rgba(255, 235, 238, 0.95), rgba(255, 245, 230, 0.9));
+  box-shadow:
+    0 8px 25px rgba(255, 179, 186, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.lobby-featured:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow:
+    0 12px 35px rgba(255, 179, 186, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.lobby-description {
+  color: var(--pug-brown);
+  font-size: 16px;
+  margin-bottom: 15px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.btn-featured {
+  background: linear-gradient(135deg, var(--pug-pink) 0%, var(--pug-peach) 50%, #FF9FA5 100%);
+  font-size: 19px;
+  padding: 18px 36px;
+  animation: btnPulse 2s ease-in-out infinite;
+}
+
+@keyframes btnPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow:
+      0 6px 0 var(--pug-dark),
+      0 8px 20px var(--shadow);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow:
+      0 8px 0 var(--pug-dark),
+      0 10px 25px rgba(255, 179, 186, 0.4);
+  }
+}

@@ -3,6 +3,7 @@ class GameUI {
     this.screens = {
       lobby: document.getElementById('lobby'),
       waiting: document.getElementById('waiting'),
+      matchmaking: document.getElementById('matchmaking'),
       game: document.getElementById('game'),
       gameOver: document.getElementById('gameOver')
     };
@@ -17,7 +18,10 @@ class GameUI {
       tilesRemaining: document.getElementById('tilesRemaining'),
       notification: document.getElementById('notification'),
       winnerDisplay: document.getElementById('winnerDisplay'),
-      finalScores: document.getElementById('finalScores')
+      finalScores: document.getElementById('finalScores'),
+      ratingValue: document.getElementById('ratingValue'),
+      ratingStats: document.getElementById('ratingStats'),
+      matchmakingStatus: document.getElementById('matchmakingStatus')
     };
 
     this.buttons = {
@@ -47,6 +51,25 @@ class GameUI {
    */
   showGameId(gameId) {
     this.elements.displayGameId.textContent = gameId;
+  }
+
+  /**
+   * Show matchmaking screen with rating
+   * @param {number} rating
+   * @param {number} gamesPlayed
+   * @param {number} wins
+   * @param {number} losses
+   */
+  showMatchmaking(rating, gamesPlayed, wins, losses) {
+    this.elements.ratingValue.textContent = rating;
+
+    if (gamesPlayed === 0) {
+      this.elements.ratingStats.textContent = 'New Player';
+    } else {
+      this.elements.ratingStats.textContent = `${wins}W - ${losses}L (${gamesPlayed} games)`;
+    }
+
+    this.showScreen('matchmaking');
   }
 
   /**
