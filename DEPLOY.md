@@ -374,19 +374,39 @@ ufw allow 3000/tcp
 ```
 
 #### ContainerConfig KeyError
-This happens when updating an existing deployment with new volumes:
-```bash
-# Stop and remove containers
-docker-compose down
+This happens when updating an existing deployment with new volumes. Use this **complete cleanup**:
 
-# Remove old images
-docker rmi chinniproject_puggle puggle-game 2>/dev/null || true
+```bash
+# Force stop containers
+docker stop puggle-game 2>/dev/null || true
+
+# Force remove containers
+docker rm -f puggle-game 2>/dev/null || true
+
+# Remove all puggle-related images
+docker rmi -f $(docker images | grep -E 'puggle|chinniproject' | awk '{print $3}') 2>/dev/null || true
+
+# Remove volume
+docker volume rm chinniproject_ratings-data 2>/dev/null || true
+
+# Clean up system
+docker system prune -f
 
 # Rebuild from scratch
-docker-compose build --no-cache
+docker-compose build --no-cache --pull
 
 # Start fresh
 docker-compose up -d
+
+# Verify
+docker-compose ps
+docker-compose logs -f
+```
+
+**Or use the automated script:**
+```bash
+cd /var/www/puggle
+./complete-docker-fix.sh
 ```
 
 #### Reset everything (nuclear option)
