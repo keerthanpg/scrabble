@@ -116,7 +116,6 @@ Allow SSH, HTTP, and HTTPS:
 ufw allow OpenSSH
 ufw allow 80/tcp
 ufw allow 443/tcp
-ufw allow 3000/tcp
 ufw enable
 ```
 
@@ -125,7 +124,7 @@ Check firewall status:
 ufw status
 ```
 
-Test your app at `http://your_droplet_ip:3000`
+Your app is now running on port 3000. Next, configure Nginx to proxy requests to it.
 
 ---
 
@@ -401,12 +400,6 @@ docker-compose up -d
 # Verify
 docker-compose ps
 docker-compose logs -f
-```
-
-**Or use the automated script:**
-```bash
-cd /var/www/puggle
-./complete-docker-fix.sh
 ```
 
 #### Reset everything (nuclear option)
