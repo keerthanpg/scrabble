@@ -1,1 +1,16 @@
-{}
+{
+  "6cM2gIfvKeVGc8vVAAAJ": {
+    "rating": 1016,
+    "gamesPlayed": 1,
+    "wins": 1,
+    "losses": 0,
+    "playerName": "Test Player 1"
+  },
+  "lEtS93uhoisAEUBOAAAH": {
+    "rating": 984,
+    "gamesPlayed": 1,
+    "wins": 0,
+    "losses": 1,
+    "playerName": "Test Player 2"
+  }
+}

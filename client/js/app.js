@@ -368,12 +368,12 @@ async function loadLeaderboard() {
     leaderboardList.innerHTML = data.players.map((player, index) => {
       const rank = index + 1;
       const rankClass = rank <= 3 ? `rank-${rank}` : '';
-      const displayId = player.id.substring(0, 8);
+      const playerName = player.playerName || 'Unknown Player';
 
       return `
         <div class="leaderboard-entry ${rankClass}">
           <div class="leaderboard-rank">${rank}</div>
-          <div class="leaderboard-player-id" title="${player.id}">${displayId}</div>
+          <div class="leaderboard-player-id" title="Socket ID: ${player.id}">${playerName}</div>
           <div class="leaderboard-rating">${player.rating}</div>
           <div class="leaderboard-stats">
             <div class="leaderboard-wins-losses">${player.wins}W - ${player.losses}L</div>

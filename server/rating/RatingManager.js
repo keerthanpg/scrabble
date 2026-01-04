@@ -52,10 +52,17 @@ class RatingManager {
         rating: 1000,
         gamesPlayed: 0,
         wins: 0,
-        losses: 0
+        losses: 0,
+        playerName: 'Unknown Player'
       };
     }
     return playerData;
+  }
+
+  setPlayerName(socketId, playerName) {
+    const playerData = this.getRating(socketId);
+    playerData.playerName = playerName;
+    this.ratings.set(socketId, playerData);
   }
 
   calculateExpectedScore(playerRating, opponentRating) {
@@ -90,7 +97,8 @@ class RatingManager {
         rating: winnerNewRating,
         gamesPlayed: winner.gamesPlayed + 1,
         wins: winner.wins + 1,
-        losses: winner.losses
+        losses: winner.losses,
+        playerName: winner.playerName || 'Unknown Player'
       };
 
       // Update loser data
@@ -98,7 +106,8 @@ class RatingManager {
         rating: loserNewRating,
         gamesPlayed: loser.gamesPlayed + 1,
         wins: loser.wins,
-        losses: loser.losses + 1
+        losses: loser.losses + 1,
+        playerName: loser.playerName || 'Unknown Player'
       };
 
       // Store updated ratings

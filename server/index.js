@@ -60,11 +60,13 @@ wordValidator.loadDictionary(dictionaryPath)
       // Game lifecycle events
       socket.on('createGame', async (data) => {
         const { playerName } = data;
+        ratingManager.setPlayerName(socket.id, playerName);
         await gameManager.createGame(socket, playerName);
       });
 
       socket.on('joinGame', async (data) => {
         const { gameId, playerName } = data;
+        ratingManager.setPlayerName(socket.id, playerName);
         await gameManager.joinGame(socket, gameId, playerName);
       });
 
@@ -88,6 +90,7 @@ wordValidator.loadDictionary(dictionaryPath)
       // Matchmaking events
       socket.on('findMatch', (data) => {
         const { playerName } = data;
+        ratingManager.setPlayerName(socket.id, playerName);
         const playerRating = ratingManager.getRating(socket.id);
         const result = matchmakingQueue.addToQueue(socket, playerName, playerRating.rating);
 
