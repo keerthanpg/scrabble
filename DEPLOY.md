@@ -67,21 +67,28 @@ apt install -y git
 
 ### Step 4: Clone Your Repository
 
-Create app directory:
+Clone the repository to your home directory:
 ```bash
-mkdir -p /var/www
-cd /var/www
-```
-
-Clone the repository:
-```bash
-git clone https://github.com/keerthanpg/scrabble.git puggle
-cd puggle
+cd ~
+git clone https://github.com/keerthanpg/scrabble.git scrabble
+cd scrabble
 ```
 
 ---
 
-### Step 5: Build and Run with Docker
+### Step 5: Create Data Directory
+
+Create a persistent data directory outside the repo for player ratings:
+```bash
+mkdir -p ~/scrabble_prod_data
+echo '{}' > ~/scrabble_prod_data/ratings.json
+```
+
+This folder persists outside the git repo, so your data won't be affected by `git pull` updates.
+
+---
+
+### Step 6: Build and Run with Docker
 
 Build and start the container:
 ```bash
@@ -90,7 +97,7 @@ docker-compose up -d --build
 
 That's it! Your app is now running! 🎉
 
-**Note:** Player ratings are automatically persisted in a Docker volume. This means ratings will survive container restarts and updates!
+**Note:** Player ratings are stored in the external `scrabble_prod_data` folder. This means ratings will survive container restarts, updates, and won't conflict with git operations!
 
 Check if it's running:
 ```bash
@@ -104,12 +111,14 @@ docker-compose logs -f
 
 Check ratings data:
 ```bash
+cat ~/scrabble_prod_data/ratings.json
+# or from inside container:
 docker exec puggle-game cat /app/data/ratings.json
 ```
 
 ---
 
-### Step 6: Configure Firewall
+### Step 7: Configure Firewall
 
 Allow SSH, HTTP, and HTTPS:
 ```bash
@@ -128,7 +137,7 @@ Your app is now running on port 3000. Next, configure Nginx to proxy requests to
 
 ---
 
-### Step 7: Install and Configure Nginx (Reverse Proxy)
+### Step 8: Install and Configure Nginx (Reverse Proxy)
 
 Install Nginx:
 ```bash
@@ -206,7 +215,7 @@ Now visit `http://your_droplet_ip` (without port 3000!)
 
 ---
 
-### Step 8: Setup SSL with Let's Encrypt (Optional but Recommended)
+### Step 9: Setup SSL with Let's Encrypt (Optional but Recommended)
 
 **Skip this if you don't have a domain name yet.**
 
@@ -234,12 +243,12 @@ certbot renew --dry-run
 
 ---
 
-### Step 9: Update Your Application
+### Step 10: Update Your Application
 
 To deploy updates in the future:
 
 ```bash
-cd /var/www/puggle
+cd ~/scrabble
 git pull origin main
 docker-compose down
 docker-compose up -d --build
@@ -247,7 +256,7 @@ docker-compose up -d --build
 
 Or use this one-liner:
 ```bash
-cd /var/www/puggle && git pull origin main && docker-compose up -d --build
+cd ~/scrabble && git pull origin main && docker-compose up -d --build
 ```
 
 ---
@@ -289,9 +298,9 @@ docker exec -it puggle-game sh
 docker stats puggle-game
 
 # Ratings data management
-docker exec puggle-game cat /app/data/ratings.json  # View ratings
-docker volume ls                                     # List volumes
-docker volume inspect chinniproject_ratings-data    # Inspect ratings volume
+cat ~/scrabble_prod_data/ratings.json               # View ratings directly
+docker exec puggle-game cat /app/data/ratings.json  # View from container
+ls -lh ~/scrabble_prod_data/                        # Check data folder
 ```
 
 ---
@@ -404,7 +413,7 @@ docker-compose logs -f
 
 #### Reset everything (nuclear option)
 ```bash
-cd /var/www/puggle
+cd ~/scrabble
 docker-compose down
 docker system prune -a  # CAREFUL: removes all unused Docker images!
 git pull origin main
@@ -483,9 +492,9 @@ If you prefer not to use Docker, here's how to deploy manually with Node.js and 
 
 2. **Clone and setup**
    ```bash
-   mkdir -p /var/www && cd /var/www
-   git clone https://github.com/keerthanpg/scrabble.git puggle
-   cd puggle
+   cd ~
+   git clone https://github.com/keerthanpg/scrabble.git scrabble
+   cd scrabble
    npm install
    ```
 
@@ -501,7 +510,7 @@ If you prefer not to use Docker, here's how to deploy manually with Node.js and 
 
 5. **Update your app**
    ```bash
-   cd /var/www/puggle
+   cd ~/scrabble
    git pull origin main
    npm install
    pm2 restart puggle
