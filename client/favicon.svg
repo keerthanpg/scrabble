@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <style>
+      .pug-face { fill: #F5DEB3; }
+      .pug-dark { fill: #3E2723; }
+      .pug-wrinkle { fill: #D4A574; }
+      .pug-snout { fill: #E8C9A0; }
+      .pug-pink { fill: #FFB3BA; }
+    </style>
+  </defs>
+
+  <!-- Head -->
+  <circle cx="50" cy="50" r="45" class="pug-face"/>
+
+  <!-- Ears -->
+  <ellipse cx="20" cy="35" rx="15" ry="20" class="pug-dark"/>
+  <ellipse cx="80" cy="35" rx="15" ry="20" class="pug-dark"/>
+
+  <!-- Snout area -->
+  <ellipse cx="50" cy="65" rx="25" ry="20" class="pug-snout"/>
+
+  <!-- Eyes -->
+  <circle cx="38" cy="40" r="8" class="pug-dark"/>
+  <circle cx="62" cy="40" r="8" class="pug-dark"/>
+  <circle cx="40" cy="38" r="3" fill="white"/>
+  <circle cx="64" cy="38" r="3" fill="white"/>
+
+  <!-- Wrinkles -->
+  <path d="M 30 30 Q 35 28 40 30" stroke="#D4A574" stroke-width="2" fill="none"/>
+  <path d="M 60 30 Q 65 28 70 30" stroke="#D4A574" stroke-width="2" fill="none"/>
+
+  <!-- Nose -->
+  <ellipse cx="50" cy="60" rx="6" ry="5" class="pug-dark"/>
+
+  <!-- Mouth -->
+  <path d="M 50 65 Q 45 70 40 68" stroke="#3E2723" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M 50 65 Q 55 70 60 68" stroke="#3E2723" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- Tongue (cute detail) -->
+  <ellipse cx="50" cy="73" rx="4" ry="3" class="pug-pink"/>
+</svg>
