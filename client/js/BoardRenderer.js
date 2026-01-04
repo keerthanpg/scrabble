@@ -176,6 +176,46 @@ class BoardRenderer {
   }
 
   /**
+   * Calculate prospective score for pending tiles
+   * @returns {number}
+   */
+  calculateProspectiveScore() {
+    if (this.pendingTiles.length === 0) return 0;
+
+    let wordScore = 0;
+    let wordMultiplier = 1;
+
+    // Calculate score for each pending tile
+    for (const tile of this.pendingTiles) {
+      let letterScore = tile.points;
+
+      // Get bonus for this position
+      const bonus = this.bonusSquares.get(`${tile.row},${tile.col}`);
+
+      if (bonus === 'dl') {
+        letterScore *= 2;
+      } else if (bonus === 'tl') {
+        letterScore *= 3;
+      } else if (bonus === 'dw') {
+        wordMultiplier *= 2;
+      } else if (bonus === 'tw') {
+        wordMultiplier *= 3;
+      }
+
+      wordScore += letterScore;
+    }
+
+    let totalScore = wordScore * wordMultiplier;
+
+    // Bingo bonus: using all 7 tiles
+    if (this.pendingTiles.length === 7) {
+      totalScore += 50; // BINGO_BONUS
+    }
+
+    return totalScore;
+  }
+
+  /**
    * Get a cell element
    * @param {number} row
    * @param {number} col

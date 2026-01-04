@@ -298,6 +298,55 @@
   flex-wrap: wrap;
 }
 
+/* Prospective Score Display */
+.prospective-score-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.prospective-score {
+  background: linear-gradient(135deg, var(--pug-pink) 0%, var(--pug-peach) 100%);
+  padding: 12px 24px;
+  border-radius: 25px;
+  border: 3px solid var(--pug-wrinkle);
+  box-shadow:
+    0 4px 12px rgba(255, 179, 186, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.prospective-score.has-tiles {
+  transform: scale(1.05);
+  box-shadow:
+    0 6px 20px rgba(255, 179, 186, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.prospective-score-label {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--pug-dark);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.prospective-score-value {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--pug-dark);
+  text-shadow:
+    1px 1px 0 rgba(255, 255, 255, 0.5),
+    2px 2px 4px rgba(93, 64, 55, 0.2);
+  min-width: 45px;
+  text-align: center;
+}
+
 /* Last Move Display */
 .last-move {
   background: linear-gradient(145deg, #f4e8d8, #e4d8c8);

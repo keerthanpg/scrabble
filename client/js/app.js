@@ -238,6 +238,7 @@ function setupSocketHandlers() {
     }
 
     updateControls();
+    updateProspectiveScore();
   });
 
   // Player passed
@@ -301,6 +302,7 @@ function setupGameControls() {
     }
 
     updateControls();
+    updateProspectiveScore();
     gameUI.showNotification('Tiles cleared', 'info');
   });
 
@@ -320,6 +322,7 @@ function setupGameControls() {
  */
 function handleTilePlaced(tile) {
   updateControls();
+  updateProspectiveScore();
 }
 
 /**
@@ -328,6 +331,7 @@ function handleTilePlaced(tile) {
  */
 function handleTileReturned(tile) {
   updateControls();
+  updateProspectiveScore();
 }
 
 /**
@@ -344,6 +348,28 @@ function updateControls() {
   // Enable/disable drag and drop
   if (dragDropHandler) {
     dragDropHandler.setEnabled(isMyTurn);
+  }
+}
+
+/**
+ * Update prospective score display
+ */
+function updateProspectiveScore() {
+  const score = boardRenderer.calculateProspectiveScore();
+  const scoreElement = document.getElementById('prospectiveScoreValue');
+  const containerElement = document.getElementById('prospectiveScore');
+
+  if (scoreElement) {
+    scoreElement.textContent = score;
+  }
+
+  // Add visual emphasis when tiles are placed
+  if (containerElement) {
+    if (score > 0) {
+      containerElement.classList.add('has-tiles');
+    } else {
+      containerElement.classList.remove('has-tiles');
+    }
   }
 }
 
