@@ -5,8 +5,8 @@ services:
     build: .
     container_name: puggle-game
     restart: unless-stopped
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     environment:
       - NODE_ENV=production
     volumes:
@@ -17,6 +17,21 @@ services:
       timeout: 3s
       retries: 3
       start_period: 40s
+    networks:
+      - puggle-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: puggle-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - puggle
     networks:
       - puggle-network
 

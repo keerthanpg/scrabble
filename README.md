@@ -1,10 +1,21 @@
-# Scrabble Web Game
+# 🐶 Puggle - Pug-Themed Scrabble Game
 
-A two-player Scrabble game with real-time multiplayer, challenge system, and chess-style timer.
+A delightful pug-themed Scrabble game with matchmaking, ELO ratings, and real-time multiplayer!
 
 ## Features
 
-- Real-time two-player gameplay over local network
+🎮 **Matchmaking System**
+- Find and play against strangers online
+- Skill-based matching with ELO ratings
+- Smart timeout expansion (±150 → ±300 → anyone after 60s)
+
+⭐ **ELO Rating System**
+- Automatic skill ratings that persist across games
+- Track wins, losses, and games played
+- New players start at 1000 rating
+
+🎯 **Classic Scrabble**
+- Real-time two-player gameplay
 - Automatic word validation against SOWPODS dictionary (~178K words)
 - Chess-style timer (15 minutes per player)
 - Challenge system for disputed words
@@ -13,17 +24,46 @@ A two-player Scrabble game with real-time multiplayer, challenge system, and che
 - Bonus squares (Double/Triple Letter/Word)
 - 50-point bonus for using all 7 tiles (bingo)
 
-## Requirements
+🐾 **Pug Theme**
+- Beautiful, playful pug-themed UI
+- Smooth animations and effects
+- Delightful user experience
 
-- Node.js (v14 or higher)
-- A modern web browser
+## Quick Start
 
-## Installation
+### Local Development
 
 1. Install dependencies:
    ```bash
    npm install
    ```
+
+2. Start the server:
+   ```bash
+   npm start
+   ```
+
+3. Open `http://localhost:3000`
+
+### Production Deployment
+
+**Simple Docker Deployment (Recommended):**
+```bash
+git clone https://github.com/keerthanpg/scrabble.git puggle
+cd puggle
+docker-compose up -d --build
+```
+
+See [DOCKER_DEPLOY_SIMPLE.md](./DOCKER_DEPLOY_SIMPLE.md) for full Docker deployment guide.
+
+**Traditional Deployment:**
+See [DEPLOY.md](./DEPLOY.md) for manual deployment with separate Nginx installation.
+
+## Requirements
+
+- Node.js (v18 or higher)
+- Docker & Docker Compose (for deployment)
+- A modern web browser
 
 ## How to Play
 

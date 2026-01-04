@@ -28,3 +28,6 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# Nginx config (mounted separately)
+nginx/
