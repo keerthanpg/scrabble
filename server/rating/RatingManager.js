@@ -129,6 +129,27 @@ class RatingManager {
       return null;
     }
   }
+
+  getTopPlayers(limit = 10) {
+    // Convert map to array and filter out players with no games
+    const players = Array.from(this.ratings.entries())
+      .map(([id, data]) => ({
+        id,
+        ...data
+      }))
+      .filter(player => player.gamesPlayed > 0);
+
+    // Sort by rating (descending), then by wins
+    players.sort((a, b) => {
+      if (b.rating !== a.rating) {
+        return b.rating - a.rating;
+      }
+      return b.wins - a.wins;
+    });
+
+    // Return top N players
+    return players.slice(0, limit);
+  }
 }
 
 module.exports = RatingManager;

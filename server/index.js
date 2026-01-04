@@ -19,6 +19,9 @@ app.use(express.static(path.join(__dirname, '../client')));
 // Serve dictionary
 app.use('/dictionary', express.static(path.join(__dirname, '../public/dictionary')));
 
+// Middleware for JSON
+app.use(express.json());
+
 // Initialize word validator
 const wordValidator = new WordValidator();
 const dictionaryPath = path.join(__dirname, '../public/dictionary/words.txt');
@@ -37,6 +40,18 @@ wordValidator.loadDictionary(dictionaryPath)
 
     // Initialize matchmaking queue
     const matchmakingQueue = new MatchmakingQueue(gameManager, ratingManager);
+
+    // API endpoint for leaderboard
+    app.get('/api/leaderboard', (req, res) => {
+      try {
+        const limit = parseInt(req.query.limit) || 10;
+        const topPlayers = ratingManager.getTopPlayers(limit);
+        res.json({ success: true, players: topPlayers });
+      } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+        res.status(500).json({ success: false, error: 'Failed to fetch leaderboard' });
+      }
+    });
 
     // Socket.io connection handling
     io.on('connection', (socket) => {

@@ -67,6 +67,16 @@ function setupLobbyHandlers() {
   document.getElementById('newGameBtn').addEventListener('click', () => {
     location.reload();
   });
+
+  // View leaderboard button
+  document.getElementById('viewLeaderboardBtn').addEventListener('click', () => {
+    loadLeaderboard();
+  });
+
+  // Back to lobby button (from leaderboard)
+  document.getElementById('backToLobbyBtn').addEventListener('click', () => {
+    gameUI.showScreen('lobby');
+  });
 }
 
 /**
@@ -334,5 +344,47 @@ function updateControls() {
   // Enable/disable drag and drop
   if (dragDropHandler) {
     dragDropHandler.setEnabled(isMyTurn);
+  }
+}
+
+/**
+ * Load and display leaderboard
+ */
+async function loadLeaderboard() {
+  try {
+    gameUI.showScreen('leaderboard');
+    const leaderboardList = document.getElementById('leaderboardList');
+    leaderboardList.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--pug-brown);">Loading top pugs...</div>';
+
+    const response = await fetch('/api/leaderboard?limit=10');
+    const data = await response.json();
+
+    if (!data.success || !data.players || data.players.length === 0) {
+      leaderboardList.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--pug-brown); font-size: 18px;">No players yet. Be the first to play!</div>';
+      return;
+    }
+
+    // Render leaderboard entries
+    leaderboardList.innerHTML = data.players.map((player, index) => {
+      const rank = index + 1;
+      const rankClass = rank <= 3 ? `rank-${rank}` : '';
+      const displayId = player.id.substring(0, 8);
+
+      return `
+        <div class="leaderboard-entry ${rankClass}">
+          <div class="leaderboard-rank">${rank}</div>
+          <div class="leaderboard-player-id" title="${player.id}">${displayId}</div>
+          <div class="leaderboard-rating">${player.rating}</div>
+          <div class="leaderboard-stats">
+            <div class="leaderboard-wins-losses">${player.wins}W - ${player.losses}L</div>
+            <div class="leaderboard-games">${player.gamesPlayed} games</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (error) {
+    console.error('Error loading leaderboard:', error);
+    const leaderboardList = document.getElementById('leaderboardList');
+    leaderboardList.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--pug-brown); font-size: 18px;">Failed to load leaderboard. Please try again.</div>';
   }
 }

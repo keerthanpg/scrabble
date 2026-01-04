@@ -5,7 +5,8 @@ class GameUI {
       waiting: document.getElementById('waiting'),
       matchmaking: document.getElementById('matchmaking'),
       game: document.getElementById('game'),
-      gameOver: document.getElementById('gameOver')
+      gameOver: document.getElementById('gameOver'),
+      leaderboard: document.getElementById('leaderboard')
     };
 
     this.elements = {
